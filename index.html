@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hongos del Bosque — Hongos Gourmet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:   #F0EDE4;
+    --ink:     #1A1A18;
+    --terra:   #B5541E;
+    --terra-l: #E8C4AE;
+    --terra-d: #7A3610;
+    --sand:    #D8D0BC;
+    --warm:    #FAF8F3;
+    --muted:   #8A8578;
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Syne',sans-serif; background:var(--cream); color:var(--ink); overflow-x:hidden; }
+
+  /* ── NAV ── */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:1.3rem 4rem;
+    display:flex; justify-content:space-between; align-items:center;
+    background:rgba(240,237,228,0.92); backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(26,26,24,0.07);
+  }
+  .nav-logo { display:flex; align-items:center; gap:.75rem; text-decoration:none; color:var(--ink); }
+  .nav-logo svg { width:38px; height:38px; }
+  .nav-brand { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:400; line-height:1.2; }
+  .nav-brand span { display:block; font-size:.67rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); font-family:'Syne',sans-serif; }
+  .nav-links { display:flex; gap:2.5rem; list-style:none; align-items:center; }
+  .nav-links a { font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; color:var(--ink); opacity:.6; transition:opacity .2s; }
+  .nav-links a:hover { opacity:1; }
+  .nav-cta { background:var(--terra) !important; color:var(--cream) !important; padding:.65rem 1.5rem !important; opacity:1 !important; }
+  .nav-cta:hover { background:var(--terra-d) !important; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    padding-top:72px;
+    position:relative;
+  }
+  .hero-left {
+    display:flex; flex-direction:column; justify-content:center;
+    padding:7rem 4rem 5rem;
+  }
+  .hero-eyebrow { display:flex; align-items:center; gap:.75rem; margin-bottom:2.5rem; }
+  .hero-eyebrow-line { width:32px; height:1px; background:var(--terra); }
+  .hero-eyebrow span { font-size:.67rem; letter-spacing:.2em; text-transform:uppercase; color:var(--terra); font-weight:500; }
+  .hero-title { font-family:'Cormorant Garamond',serif; font-size:clamp(4rem,5.5vw,6.2rem); font-weight:300; line-height:1.02; margin-bottom:.4rem; }
+  .hero-title-italic { font-family:'Cormorant Garamond',serif; font-size:clamp(4rem,5.5vw,6.2rem); font-weight:300; font-style:italic; color:var(--terra); line-height:1.02; margin-bottom:2.5rem; display:block; }
+  .hero-sub { font-size:.9rem; line-height:1.85; color:var(--muted); max-width:400px; margin-bottom:3rem; }
+  .hero-actions { display:flex; gap:1.5rem; align-items:center; margin-bottom:4rem; }
+  .btn-primary { background:var(--ink); color:var(--cream); padding:1rem 2.2rem; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; border:none; cursor:pointer; transition:background .25s,transform .15s; text-decoration:none; display:inline-block; font-family:'Syne',sans-serif; }
+  .btn-primary:hover { background:var(--terra); transform:translateY(-1px); }
+  .btn-terra { background:var(--terra); color:var(--cream); padding:1rem 2.2rem; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; border:none; cursor:pointer; transition:background .25s,transform .15s; text-decoration:none; display:inline-block; font-family:'Syne',sans-serif; }
+  .btn-terra:hover { background:var(--terra-d); transform:translateY(-1px); }
+  .btn-ghost { font-size:.75rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); text-decoration:none; display:flex; align-items:center; gap:.5rem; transition:gap .2s,color .2s; }
+  .btn-ghost:hover { color:var(--terra); gap:.75rem; }
+  .btn-ghost::after { content:'→'; }
+  .hero-stats { display:flex; gap:3rem; padding-top:2.5rem; border-top:1px solid var(--sand); }
+  .stat-num { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; line-height:1; margin-bottom:.3rem; }
+  .stat-label { font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+
+  /* HERO RIGHT — foto real */
+  .hero-right {
+    position:relative; overflow:hidden; background:var(--ink);
+  }
+  .hero-right img {
+    width:100%; height:100%;
+    object-fit:cover; object-position:center 20%;
+    display:block;
+    filter:contrast(1.05) brightness(0.88);
+  }
+  /* gradiente sutil que da continuidad con el lado izquierdo */
+  .hero-right::before {
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(to right, rgba(240,237,228,0.18) 0%, transparent 18%),
+               linear-gradient(to top, rgba(26,26,24,0.45) 0%, transparent 50%);
+    z-index:1; pointer-events:none;
+  }
+  .hero-float {
+    position:absolute; bottom:2.5rem; left:-1.5rem; z-index:3;
+    background:var(--cream); padding:1.5rem 1.75rem;
+    box-shadow:0 24px 64px rgba(0,0,0,.28); width:240px;
+  }
+  .hero-float-label { font-size:.59rem; letter-spacing:.18em; text-transform:uppercase; color:var(--terra); margin-bottom:.5rem; }
+  .hero-float-text { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300; line-height:1.2; }
+  .hero-float-sub { font-size:.67rem; color:var(--muted); margin-top:.5rem; }
+
+  /* ── CLAIM BAND ── */
+  #claim-band { background:var(--terra); padding:2rem 4rem; display:flex; align-items:center; justify-content:center; gap:2rem; }
+  .claim-text { font-family:'Cormorant Garamond',serif; font-size:clamp(1.4rem,3vw,2.1rem); font-weight:300; font-style:italic; color:white; text-align:center; }
+  .claim-dot { width:6px; height:6px; background:rgba(255,255,255,.4); border-radius:50%; flex-shrink:0; }
+
+  /* ── SHARED ── */
+  .sec-label { font-size:.65rem; letter-spacing:.22em; text-transform:uppercase; color:var(--terra); margin-bottom:.75rem; }
+  .sec-label-light { font-size:.65rem; letter-spacing:.22em; text-transform:uppercase; color:var(--terra-l); margin-bottom:.75rem; }
+  .sec-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,3.5vw,3rem); font-weight:300; line-height:1.1; }
+
+  /* ── VARIEDADES ── */
+  #variedades { background:var(--ink); padding:6rem 4rem; color:var(--cream); }
+  .var-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:4rem; }
+  .var-link { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(240,237,228,.5); text-decoration:none; border-bottom:1px solid rgba(255,255,255,.2); padding-bottom:2px; }
+  .var-link:hover { color:var(--terra-l); border-color:var(--terra-l); }
+
+  /* Grid 3 grandes — fotos reales de Wikimedia */
+  .var-grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:rgba(255,255,255,.05); margin-bottom:2px; }
+  .var-card { position:relative; overflow:hidden; aspect-ratio:4/3; background:#2A2A28; }
+  .var-card img { width:100%; height:100%; object-fit:cover; opacity:.6; transition:opacity .4s,transform .5s; display:block; }
+  .var-card:hover img { opacity:.8; transform:scale(1.04); }
+  .var-overlay { position:absolute; inset:0; background:linear-gradient(180deg,transparent 25%,rgba(26,26,24,.92) 100%); }
+  .var-info { position:absolute; bottom:1.5rem; left:1.5rem; right:1.5rem; z-index:2; }
+  .var-type { font-size:.58rem; letter-spacing:.15em; text-transform:uppercase; color:var(--terra-l); margin-bottom:.3rem; }
+  .var-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:400; color:var(--cream); line-height:1.1; }
+  .var-desc { font-size:.72rem; color:rgba(240,237,228,.55); margin-top:.3rem; line-height:1.5; }
+
+  /* Grid 3 mini (ya no 6, excluimos Black Pearl, Chestnut, Enoki) */
+  .var-grid-3b { display:grid; grid-template-columns:repeat(6,1fr); gap:2px; background:rgba(255,255,255,.05); }
+  .var-mini { background:var(--ink); padding:1.75rem 1rem; text-align:center; transition:background .25s; }
+  .var-mini:hover { background:rgba(181,84,30,.15); }
+  .var-mini-dot { width:6px; height:6px; background:var(--terra); border-radius:50%; margin:0 auto .85rem; }
+  .var-mini-name { font-family:'Cormorant Garamond',serif; font-size:1rem; color:var(--cream); line-height:1.2; margin-bottom:.3rem; }
+  .var-mini-type { font-size:.57rem; letter-spacing:.12em; text-transform:uppercase; color:var(--terra-l); }
+  /* foto en mini */
+  .var-mini-img { width:64px; height:64px; border-radius:50%; object-fit:cover; margin:0 auto .85rem; display:block; opacity:.75; }
+
+  /* ── GALERÍA GOURMET ── */
+  #galeria { padding:7rem 4rem; background:var(--warm); }
+  .gal-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:3.5rem; }
+  .gal-grid { display:grid; grid-template-columns:1.4fr 1fr 1fr; grid-template-rows:auto auto; gap:2px; background:var(--sand); }
+  .gal-item { position:relative; overflow:hidden; background:var(--ink); }
+  .gal-item:first-child { grid-row:span 2; }
+  .gal-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s,opacity .3s; opacity:.88; min-height:260px; }
+  .gal-item:first-child img { min-height:520px; }
+  .gal-item:hover img { transform:scale(1.04); opacity:1; }
+  .gal-caption { position:absolute; bottom:0; left:0; right:0; padding:1rem 1.25rem; background:linear-gradient(transparent,rgba(26,26,24,.88)); color:var(--cream); }
+  .gal-cap-v { font-size:.57rem; letter-spacing:.15em; text-transform:uppercase; color:var(--terra-l); margin-bottom:.2rem; }
+  .gal-cap-d { font-family:'Cormorant Garamond',serif; font-size:1rem; font-style:italic; }
+
+  /* ── GUÍA PDF ── */
+  #guia { background:var(--cream); border-top:1px solid var(--sand); }
+  .guia-inner { display:grid; grid-template-columns:1fr 1fr; min-height:520px; }
+  .guia-visual { background:var(--ink); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .guia-visual img { width:100%; height:100%; object-fit:cover; opacity:.45; }
+  .guia-visual-bg { position:absolute; inset:0; background:linear-gradient(135deg,rgba(181,84,30,.4) 0%,rgba(26,26,24,.85) 100%); z-index:1; }
+  .guia-cover { position:relative; z-index:2; width:220px; background:var(--cream); padding:2.5rem 2rem; box-shadow:0 24px 80px rgba(0,0,0,.4); }
+  .guia-cover-brand { font-size:.6rem; letter-spacing:.18em; text-transform:uppercase; color:var(--terra); margin-bottom:.75rem; }
+  .guia-cover-title { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:300; line-height:1.15; margin-bottom:.75rem; }
+  .guia-cover-sub { font-size:.72rem; color:var(--muted); line-height:1.6; margin-bottom:1.25rem; }
+  .guia-cover-tag { display:inline-block; background:var(--terra); color:white; font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; padding:.3rem .7rem; }
+  .guia-text { padding:6rem 4rem; display:flex; flex-direction:column; justify-content:center; }
+  .guia-text h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,3.5vw,3rem); font-weight:300; line-height:1.1; margin-bottom:1.25rem; }
+  .guia-text h2 em { font-style:italic; color:var(--terra); }
+  .guia-text p { font-size:.88rem; line-height:1.9; color:var(--muted); margin-bottom:1.5rem; max-width:440px; }
+  .guia-includes { list-style:none; margin-bottom:2.5rem; }
+  .guia-includes li { display:flex; align-items:center; gap:.85rem; padding:.8rem 0; border-top:1px solid var(--sand); font-size:.84rem; }
+  .guia-includes li:last-child { border-bottom:1px solid var(--sand); }
+  .guia-check { color:var(--terra); font-weight:700; }
+
+  /* ── B2B ── */
+  #restaurantes { padding:8rem 4rem; display:grid; grid-template-columns:1fr 1fr; gap:7rem; align-items:center; background:var(--warm); }
+  .b2b-text h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,4vw,3.8rem); font-weight:300; line-height:1.08; margin-bottom:.5rem; }
+  .b2b-text h2 em { font-style:italic; color:var(--terra); }
+  .b2b-sub { font-family:'Cormorant Garamond',serif; font-size:1.25rem; font-style:italic; color:var(--muted); margin-bottom:2rem; }
+  .b2b-text p { font-size:.88rem; line-height:1.95; color:var(--muted); margin-bottom:2.5rem; max-width:460px; }
+  .b2b-feats { list-style:none; margin-bottom:2.5rem; }
+  .b2b-feats li { display:flex; align-items:flex-start; gap:1rem; padding:1rem 0; border-top:1px solid var(--sand); font-size:.84rem; line-height:1.6; }
+  .b2b-feats li:last-child { border-bottom:1px solid var(--sand); }
+  .feat-ok { color:var(--terra); font-weight:700; flex-shrink:0; margin-top:1px; }
+  .feat-title { display:block; font-weight:500; margin-bottom:.15rem; }
+  .feat-desc { color:var(--muted); font-size:.79rem; }
+  .b2b-visual { position:relative; }
+  /* Usamos la misma foto del chef en B2B */
+  .b2b-img-main { width:100%; aspect-ratio:3/4; object-fit:cover; object-position:center 15%; display:block; }
+  .b2b-img-sec { position:absolute; bottom:-2.5rem; left:-2.5rem; width:55%; aspect-ratio:1; object-fit:cover; border:5px solid var(--warm); box-shadow:0 16px 48px rgba(0,0,0,.15); }
+  .b2b-badge { position:absolute; top:-1.5rem; right:-1.5rem; width:130px; height:130px; background:var(--terra); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; z-index:3; }
+  .b2b-badge .big { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; line-height:1; }
+  .b2b-badge .small { font-size:.57rem; letter-spacing:.1em; text-transform:uppercase; text-align:center; opacity:.85; max-width:80px; line-height:1.4; }
+
+  /* ── CONTACTO ── */
+  #contacto { background:var(--ink); color:var(--cream); padding:7rem 4rem; display:grid; grid-template-columns:1fr 1fr; gap:7rem; align-items:start; }
+  .contact-h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,4vw,3.5rem); font-weight:300; line-height:1.08; margin-bottom:1.25rem; }
+  .contact-h2 em { font-style:italic; color:var(--terra-l); }
+  .contact-p { font-size:.87rem; line-height:1.9; color:rgba(240,237,228,.55); margin-bottom:3rem; }
+  .contact-perks { list-style:none; }
+  .contact-perks li { display:flex; align-items:center; gap:1rem; padding:.9rem 0; border-top:1px solid rgba(255,255,255,.07); font-size:.82rem; color:rgba(240,237,228,.65); }
+  .contact-perks li:last-child { border-bottom:1px solid rgba(255,255,255,.07); }
+  .perk-dot { width:6px; height:6px; background:var(--terra-l); border-radius:50%; flex-shrink:0; }
+  .contact-form { display:flex; flex-direction:column; gap:1.1rem; }
+  .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; }
+  .form-group { display:flex; flex-direction:column; gap:.45rem; }
+  .form-group label { font-size:.61rem; letter-spacing:.16em; text-transform:uppercase; color:rgba(240,237,228,.4); }
+  .form-group input,.form-group select,.form-group textarea { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); color:var(--cream); padding:.85rem 1rem; font-family:'Syne',sans-serif; font-size:.84rem; outline:none; transition:border-color .2s; -webkit-appearance:none; }
+  .form-group input::placeholder,.form-group textarea::placeholder { color:rgba(240,237,228,.2); }
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-color:var(--terra-l); }
+  .form-group select option { background:#1A1A18; color:var(--cream); }
+  .form-group textarea { resize:vertical; min-height:90px; }
+  .form-submit { background:var(--terra); color:white; border:none; padding:1.1rem 2.5rem; font-family:'Syne',sans-serif; font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; transition:background .25s,transform .15s; align-self:flex-start; margin-top:.25rem; }
+  .form-submit:hover { background:var(--terra-d); transform:translateY(-1px); }
+
+  /* ── TIENDA ── */
+  #tienda { padding:7rem 4rem; background:var(--cream); }
+  .shop-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:3.5rem; }
+  .shop-filter { display:flex; border:1px solid var(--sand); }
+  .filter-btn { background:none; border:none; border-right:1px solid var(--sand); padding:.55rem 1.1rem; font-family:'Syne',sans-serif; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; color:var(--muted); transition:all .2s; }
+  .filter-btn:last-child { border-right:none; }
+  .filter-btn.active,.filter-btn:hover { background:var(--ink); color:var(--cream); }
+  .products-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:var(--sand); }
+  .product-card { background:var(--cream); cursor:pointer; transition:transform .3s,box-shadow .3s; position:relative; overflow:hidden; }
+  .product-card:hover { transform:translateY(-5px); box-shadow:0 20px 50px rgba(0,0,0,.1); z-index:2; }
+  .product-image { aspect-ratio:1; background:var(--warm); position:relative; overflow:hidden; }
+  .product-image img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s; }
+  .product-card:hover .product-image img { transform:scale(1.05); }
+  .product-tag { position:absolute; top:1rem; left:1rem; background:var(--terra); color:white; font-size:.57rem; letter-spacing:.1em; text-transform:uppercase; padding:.25rem .6rem; z-index:2; }
+  .product-info { padding:1.4rem 1.5rem; border-top:1px solid var(--sand); }
+  .product-variety { font-size:.59rem; letter-spacing:.14em; text-transform:uppercase; color:var(--terra); margin-bottom:.3rem; }
+  .product-name { font-family:'Cormorant Garamond',serif; font-size:1.25rem; font-weight:400; margin-bottom:.2rem; line-height:1.2; }
+  .product-desc { font-size:.74rem; color:var(--muted); line-height:1.6; margin-bottom:1.2rem; }
+  .product-footer { display:flex; justify-content:space-between; align-items:center; }
+  .product-price { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300; }
+  .product-add { background:var(--ink); color:var(--cream); border:none; width:36px; height:36px; cursor:pointer; font-size:1.3rem; display:flex; align-items:center; justify-content:center; transition:background .2s; }
+  .product-add:hover { background:var(--terra); }
+
+  /* ── NOSOTROS ── */
+  #nosotros { padding:7rem 4rem; background:var(--warm); display:grid; grid-template-columns:1fr 1fr; gap:7rem; align-items:center; border-top:1px solid var(--sand); }
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; background:var(--sand); }
+  .about-block { background:var(--warm); padding:2.5rem 2rem; display:flex; flex-direction:column; justify-content:flex-end; }
+  .about-block.dark { background:var(--ink); color:var(--cream); }
+  .about-block.terra { background:var(--terra); color:white; grid-column:span 2; padding:2.5rem; align-items:center; justify-content:center; text-align:center; }
+  .about-num { font-family:'Cormorant Garamond',serif; font-size:3.5rem; font-weight:300; color:var(--terra); line-height:1; margin-bottom:.4rem; }
+  .about-block.dark .about-num { color:var(--terra-l); }
+  .about-block.terra .about-num { color:rgba(255,255,255,.92); font-size:1.5rem; font-style:italic; }
+  .about-label { font-size:.64rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .about-block.dark .about-label { color:rgba(240,237,228,.4); }
+  .about-block.terra .about-label { color:rgba(255,255,255,.6); font-size:.6rem; margin-bottom:.75rem; }
+  .about-text h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,3.5vw,3.5rem); font-weight:300; line-height:1.08; margin-bottom:1.5rem; }
+  .about-text h2 em { font-style:italic; color:var(--terra); }
+  .about-text p { font-size:.87rem; line-height:1.95; color:var(--muted); margin-bottom:1.25rem; }
+
+  /* ── FOOTER ── */
+  footer { background:var(--ink); color:var(--cream); padding:5rem 4rem 2.5rem; }
+  .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:4rem; margin-bottom:4rem; padding-bottom:4rem; border-bottom:1px solid rgba(255,255,255,.07); }
+  .footer-logo { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; margin-bottom:1rem; display:block; }
+  .footer-desc { font-size:.82rem; color:rgba(240,237,228,.45); line-height:1.8; max-width:280px; margin-bottom:1.5rem; }
+  .footer-col h4 { font-size:.61rem; letter-spacing:.18em; text-transform:uppercase; color:rgba(240,237,228,.35); margin-bottom:1.5rem; }
+  .footer-col ul { list-style:none; }
+  .footer-col ul li { margin-bottom:.75rem; }
+  .footer-col ul li a { font-size:.83rem; color:rgba(240,237,228,.65); text-decoration:none; transition:color .2s; }
+  .footer-col ul li a:hover { color:var(--terra-l); }
+  .footer-bottom { display:flex; justify-content:space-between; font-size:.7rem; color:rgba(240,237,228,.25); letter-spacing:.06em; }
+
+
+  /* ── ILLUSTRATED VAR CARDS ── */
+  .var-card-illus {
+    position:relative; overflow:hidden; aspect-ratio:4/3;
+    background:#1A1A18; display:flex; align-items:center; justify-content:center;
+  }
+  .var-card-illus .illus-wrap {
+    width:55%; height:55%; display:flex; align-items:center; justify-content:center;
+    position:relative; z-index:2;
+    transition: transform .4s;
+  }
+  .var-card-illus:hover .illus-wrap { transform: scale(1.08); }
+  .var-card-illus .var-overlay { position:absolute; inset:0; background:linear-gradient(180deg,transparent 40%,rgba(26,26,24,.95) 100%); z-index:1; }
+  .var-card-illus .var-info { position:absolute; bottom:1.5rem; left:1.5rem; right:1.5rem; z-index:3; }
+  .var-card-illus::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(181,84,30,0.08) 0%, transparent 70%);
+    z-index:0;
+  }
+  /* Mini cards with illustration */
+  .var-mini { cursor:pointer; }
+  .var-mini:hover .var-mini-name { color:var(--terra-l); }
+  .var-mini .illus-mini { width:64px; height:64px; margin:0 auto .75rem; display:block; }
+  .var-mini .illus-mini svg { width:100%; height:100%; }
+
+  .guia-form { display:flex; flex-direction:column; gap:.85rem; margin-top:.5rem; }
+  .guia-form-row { display:grid; grid-template-columns:1fr 1fr; gap:.85rem; }
+  .guia-form-group { display:flex; flex-direction:column; gap:.4rem; }
+  .guia-form-group label { font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .guia-form-group input { background:var(--warm); border:1px solid var(--sand); color:var(--ink); padding:.75rem 1rem; font-family:'Syne',sans-serif; font-size:.84rem; outline:none; transition:border-color .2s; }
+  .guia-form-group input:focus { border-color:var(--terra); }
+  .guia-form-group input::placeholder { color:var(--muted); opacity:.6; }
+  @media(max-width:960px){
+    #blog { padding:4rem 1.5rem !important; }
+    #blog > div:last-child { grid-template-columns:1fr !important; }
+    #blog > div:last-child > div:last-child { grid-column:auto !important; }
+    .guia-form-row{grid-template-columns:1fr}
+     .guia-form-row{grid-template-columns:1fr} }
+  .about-mision {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.15rem;
+    font-style:italic;
+    color:var(--terra);
+    line-height:1.6;
+    margin-bottom:1.75rem !important;
+    padding-bottom:1.5rem;
+    border-bottom:1px solid var(--sand);
+  }
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .hero-eyebrow { animation:fadeUp .5s ease both; }
+  .hero-title { animation:fadeUp .5s .08s ease both; }
+  .hero-title-italic { animation:fadeUp .5s .14s ease both; }
+  .hero-sub { animation:fadeUp .5s .2s ease both; }
+  .hero-actions { animation:fadeUp .5s .26s ease both; }
+  .hero-stats { animation:fadeUp .5s .32s ease both; }
+
+  .toast { position:fixed; bottom:2rem; right:2rem; background:var(--terra); color:white; padding:1rem 1.5rem; font-size:.8rem; letter-spacing:.04em; z-index:200; transform:translateY(80px); opacity:0; transition:all .3s; pointer-events:none; }
+  .toast.show { transform:translateY(0); opacity:1; }
+
+  @media(max-width:960px){
+    nav{padding:1.2rem 1.5rem} .nav-links{display:none}
+    #hero{grid-template-columns:1fr} .hero-right{min-height:65vw} .hero-left{padding:3rem 1.5rem 2rem} .hero-float{display:none}
+    #claim-band{padding:1.5rem}
+    #variedades,#galeria,#tienda,#nosotros{padding:4rem 1.5rem}
+    #restaurantes,#contacto{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
+    .var-grid-3{grid-template-columns:1fr 1fr}
+    .var-grid-3b{grid-template-columns:repeat(3,1fr)}
+    .gal-grid{grid-template-columns:1fr 1fr} .gal-item:first-child{grid-row:auto}
+    .products-grid{grid-template-columns:repeat(2,1fr)}
+    .shop-header{flex-direction:column;gap:1.5rem;align-items:flex-start}
+    .footer-top{grid-template-columns:1fr 1fr;gap:2.5rem}
+    .form-row{grid-template-columns:1fr}
+    .b2b-img-sec{display:none}
+    .guia-inner{grid-template-columns:1fr}
+    .guia-visual{min-height:300px}
+    .guia-text{padding:3rem 1.5rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="18" stroke="#1A1A18" stroke-width="1.2"/><text x="50%" y="54%" font-family="Cormorant Garamond,serif" font-size="16" fill="#1A1A18" text-anchor="middle" dominant-baseline="middle" font-weight="300">hb</text></svg>
+    <div class="nav-brand">hongos del bosque<span>hongos gourmet · Buenos Aires</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#variedades">Variedades</a></li>
+    <li><a href="#blog">Recetas</a></li>
+    <li><a href="#guia">Guía gratis</a></li>
+    <li><a href="#restaurantes">Restaurantes</a></li>
+    <li><a href="#tienda">Tienda</a></li>
+    <li><a href="#contacto" class="nav-cta">Tu próximo proveedor</a></li>
+  </ul>
+</nav>
+
+<!-- HERO — foto real de la chef -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow"><div class="hero-eyebrow-line"></div><span>Hongos Gourmet · Cultivo Artesanal</span></div>
+    <h1 class="hero-title">Pioneros en el cultivo de</h1>
+    <span class="hero-title-italic">setas especiales</span>
+    <p class="hero-sub">Cultivamos y distribuimos hongos premium para restaurantes y cocineros que buscan diferenciarse. Variedades únicas, calidad consistente, entrega semanal en Buenos Aires.</p>
+    <div class="hero-actions">
+      <a href="#variedades" class="btn-primary">Conocé el catálogo completo</a>
+      <a href="#tienda" class="btn-ghost">Ver la tienda</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">9+</div><div class="stat-label">Variedades premium</div></div>
+      <div><div class="stat-num">3</div><div class="stat-label">Formatos disponibles</div></div>
+      <div><div class="stat-num">BA</div><div class="stat-label">Producción local</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="chef_hongos.jpg" alt="Chef cocinando con hongos gourmet">
+    
+      <div class="hero-float-text">6 tipos<br>gourmet</div>
+      <div class="hero-float-sub">Frescos · Secos · En polvo</div>
+    </div>
+  </div>
+</section>
+</div>
+</div>
+
+<!-- VARIEDADES — 9 ilustraciones botánicas de marca -->
+<section id="variedades">
+  <div class="var-header">
+    <div><div class="sec-label-light">Catálogo</div><h2 class="sec-title">Variedades <em style="font-style:italic;color:var(--terra-l)">premium</em></h2></div>
+    <a href="#tienda" class="var-link">Ver tienda →</a>
+  </div>
+  <div class="var-grid-3">
+    <div class="var-card-illus">
+      <div class="illus-wrap"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M16 76 Q24 38 80 30 Q136 38 144 76 Q140 88 80 92 Q20 88 16 76Z" fill="#7A3610" stroke="#B5541E" stroke-width="1.2"/><path d="M80 30 Q70 56 68 92" fill="none" stroke="#B5541E" stroke-width="0.7" opacity="0.5"/><path d="M80 30 Q90 56 92 92" fill="none" stroke="#B5541E" stroke-width="0.7" opacity="0.5"/><path d="M80 30 Q56 48 42 80" fill="none" stroke="#B5541E" stroke-width="0.6" opacity="0.4"/><path d="M80 30 Q104 48 118 80" fill="none" stroke="#B5541E" stroke-width="0.6" opacity="0.4"/><path d="M80 30 Q42 44 26 72" fill="none" stroke="#B5541E" stroke-width="0.5" opacity="0.3"/><path d="M80 30 Q118 44 134 72" fill="none" stroke="#B5541E" stroke-width="0.5" opacity="0.3"/><path d="M24 80 Q80 100 136 80" fill="none" stroke="#E8C4AE" stroke-width="0.9" opacity="0.55"/><path d="M70 92 Q68 116 66 130 Q74 134 88 134 Q92 116 90 92Z" fill="#5A2A0E" stroke="#7A3610" stroke-width="0.9"/><ellipse cx="79" cy="112" rx="12" ry="3.5" fill="none" stroke="#E8C4AE" stroke-width="0.9" opacity="0.65"/></svg></div>
+      <div class="var-overlay"></div>
+      <div class="var-info">
+        <div class="var-type">Lentinula edodes</div>
+        <div class="var-name">Shiitake</div>
+        <div class="var-desc">Umami profundo, textura carnosa. El más versátil de la alta cocina.</div>
+      </div>
+    </div>
+    <div class="var-card-illus">
+      <div class="illus-wrap"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M62 138 Q60 88 63 68 Q69 54 80 52 Q91 54 97 68 Q100 88 98 138Z" fill="#C8A882" stroke="#E8C4AE" stroke-width="0.9"/><path d="M68 138 Q66 88 68 64" fill="none" stroke="#F0EDE4" stroke-width="0.6" opacity="0.3"/><path d="M80 138 Q80 88 80 52" fill="none" stroke="#F0EDE4" stroke-width="0.6" opacity="0.3"/><path d="M92 138 Q94 88 92 64" fill="none" stroke="#F0EDE4" stroke-width="0.6" opacity="0.3"/><path d="M46 60 Q58 42 80 40 Q102 42 114 60 Q110 72 80 74 Q50 72 46 60Z" fill="#A07850" stroke="#C8A882" stroke-width="0.9"/><path d="M54 62 Q80 74 106 62" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.5"/><path d="M58 67 Q80 77 102 67" fill="none" stroke="#E8C4AE" stroke-width="0.5" opacity="0.35"/><ellipse cx="80" cy="138" rx="18" ry="5" fill="#7A5530" stroke="#A07850" stroke-width="0.7"/></svg></div>
+      <div class="var-overlay"></div>
+      <div class="var-info">
+        <div class="var-type">Pleurotus eryngii</div>
+        <div class="var-name">King Oyster</div>
+        <div class="var-desc">Textura firme, perfecto a la plancha. El favorito de los chefs de autor.</div>
+      </div>
+    </div>
+    <div class="var-card-illus">
+      <div class="illus-wrap"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><ellipse cx="80" cy="78" rx="48" ry="44" fill="#D8C8A8" stroke="#E8C4AE" stroke-width="0.9"/><path d="M48 78 Q80 66 112 78" fill="none" stroke="#F0EDE4" stroke-width="0.7" opacity="0.45"/><path d="M42 86 Q80 74 118 86" fill="none" stroke="#F0EDE4" stroke-width="0.5" opacity="0.35"/><line x1="80" y1="122" x2="77" y2="148" stroke="#E8C4AE" stroke-width="1.3" stroke-linecap="round"/><line x1="88" y1="120" x2="91" y2="146" stroke="#E8C4AE" stroke-width="1.2" stroke-linecap="round"/><line x1="72" y1="120" x2="68" y2="146" stroke="#E8C4AE" stroke-width="1.2" stroke-linecap="round"/><line x1="98" y1="115" x2="104" y2="140" stroke="#D8B890" stroke-width="1.1" stroke-linecap="round"/><line x1="62" y1="115" x2="56" y2="140" stroke="#D8B890" stroke-width="1.1" stroke-linecap="round"/><line x1="110" y1="106" x2="120" y2="130" stroke="#C8A882" stroke-width="1" stroke-linecap="round"/><line x1="50" y1="106" x2="40" y2="129" stroke="#C8A882" stroke-width="1" stroke-linecap="round"/><line x1="120" y1="94" x2="134" y2="114" stroke="#B5A080" stroke-width="0.9" stroke-linecap="round"/><line x1="40" y1="94" x2="26" y2="113" stroke="#B5A080" stroke-width="0.9" stroke-linecap="round"/><line x1="84" y1="121" x2="83" y2="150" stroke="#D8B890" stroke-width="1" stroke-linecap="round"/><line x1="94" y1="118" x2="97" y2="146" stroke="#C8A882" stroke-width="0.9" stroke-linecap="round"/><line x1="66" y1="118" x2="62" y2="146" stroke="#C8A882" stroke-width="0.9" stroke-linecap="round"/><path d="M62 120 Q80 128 98 120" fill="#B5A080" stroke="none"/></svg></div>
+      <div class="var-overlay"></div>
+      <div class="var-info">
+        <div class="var-type">Hericium erinaceus</div>
+        <div class="var-name">Melena de León</div>
+        <div class="var-desc">Sabor marino delicado. Funcional, único, impresionante en el plato.</div>
+      </div>
+    </div>
+  </div>
+  <div class="var-grid-3b">
+    <div class="var-mini" data-key="girgola" onclick="promoteVariety('girgola')" style="cursor:pointer" title="Ver Gírgola en detalle">
+      <div class="illus-mini"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M16 88 Q26 52 58 50 Q74 52 78 70 Q74 84 36 90 Q20 90 16 88Z" fill="#505048" stroke="#7A7870" stroke-width="0.9"/><path d="M45 90 Q46 112 48 126" fill="none" stroke="#3A3A34" stroke-width="4.5" stroke-linecap="round"/><path d="M27 84 Q52 94 74 78" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.5"/><path d="M40 78 Q54 34 80 28 Q106 34 120 58 Q122 74 80 82 Q42 82 40 78Z" fill="#404038" stroke="#686860" stroke-width="0.9"/><path d="M74 82 Q73 110 71 130" fill="none" stroke="#303028" stroke-width="5.5" stroke-linecap="round"/><path d="M53 76 Q80 88 108 70" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.55"/><path d="M58 80 Q80 90 106 76" fill="none" stroke="#E8C4AE" stroke-width="0.5" opacity="0.4"/><path d="M86 72 Q100 46 122 48 Q142 52 144 70 Q142 82 110 86 Q88 84 86 72Z" fill="#555550" stroke="#7A7870" stroke-width="0.9"/><path d="M115 86 Q117 106 118 120" fill="none" stroke="#3A3A34" stroke-width="4" stroke-linecap="round"/><path d="M94 76 Q114 84 136 72" fill="none" stroke="#E8C4AE" stroke-width="0.6" opacity="0.45"/></svg></div>
+      <div class="var-mini-name">Gírgola</div>
+      <div class="var-mini-type">Pleurotus ostreatus</div>
+    </div>
+    <div class="var-mini" data-key="girgola_rosa" onclick="promoteVariety('girgola_rosa')" style="cursor:pointer" title="Ver Gírgola Rosa en detalle">
+      <div class="illus-mini"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M16 86 Q28 52 58 50 Q74 54 76 70 Q72 82 34 88 Q18 88 16 86Z" fill="#C85878" stroke="#E87898" stroke-width="0.9"/><path d="M44 88 Q45 110 46 124" fill="none" stroke="#A03858" stroke-width="4.5" stroke-linecap="round"/><path d="M28 82 Q52 90 72 76" fill="none" stroke="#F0C0D0" stroke-width="0.7" opacity="0.6"/><path d="M40 76 Q54 34 80 28 Q106 34 122 58 Q124 74 80 80 Q40 80 40 76Z" fill="#B84868" stroke="#D87090" stroke-width="0.9"/><path d="M74 80 Q72 110 70 128" fill="none" stroke="#883050" stroke-width="5.5" stroke-linecap="round"/><path d="M54 74 Q80 84 108 68" fill="none" stroke="#F0C0D0" stroke-width="0.7" opacity="0.6"/><path d="M58 78 Q80 86 106 74" fill="none" stroke="#F0C0D0" stroke-width="0.5" opacity="0.45"/><path d="M88 70 Q100 46 124 48 Q142 52 144 68 Q142 80 110 84 Q90 82 88 70Z" fill="#C05070" stroke="#E07898" stroke-width="0.9"/><path d="M113 84 Q115 102 116 118" fill="none" stroke="#A03858" stroke-width="4" stroke-linecap="round"/><path d="M96 74 Q115 82 136 70" fill="none" stroke="#F0C0D0" stroke-width="0.6" opacity="0.5"/></svg></div>
+      <div class="var-mini-name">Gírgola Rosa</div>
+      <div class="var-mini-type">Pleurotus djamor</div>
+    </div>
+    <div class="var-mini" data-key="pioppino" onclick="promoteVariety('pioppino')" style="cursor:pointer" title="Ver Pioppino en detalle">
+      <div class="illus-mini"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><line x1="36" y1="134" x2="34" y2="88" stroke="#4A3020" stroke-width="2.8" stroke-linecap="round"/><line x1="48" y1="134" x2="50" y2="80" stroke="#4A3020" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="34" cy="84" rx="18" ry="9" fill="#6A4828" stroke="#8A6848" stroke-width="0.8"/><ellipse cx="50" cy="76" rx="16" ry="8" fill="#7A5838" stroke="#9A7858" stroke-width="0.8"/><line x1="70" y1="134" x2="68" y2="72" stroke="#4A3020" stroke-width="3.2" stroke-linecap="round"/><line x1="82" y1="134" x2="84" y2="62" stroke="#4A3020" stroke-width="2.8" stroke-linecap="round"/><line x1="94" y1="134" x2="96" y2="76" stroke="#4A3020" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="68" cy="68" rx="20" ry="10" fill="#5A3818" stroke="#8A5830" stroke-width="0.9"/><ellipse cx="84" cy="58" rx="22" ry="11" fill="#4A2E14" stroke="#7A4828" stroke-width="0.9"/><ellipse cx="96" cy="72" rx="17" ry="8.5" fill="#623820" stroke="#8A5830" stroke-width="0.8"/><path d="M66 60 Q84 52 102 58" fill="none" stroke="#C8A060" stroke-width="0.7" opacity="0.4"/><line x1="114" y1="134" x2="112" y2="86" stroke="#4A3020" stroke-width="2.8" stroke-linecap="round"/><line x1="126" y1="134" x2="128" y2="78" stroke="#4A3020" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="112" cy="82" rx="18" ry="9" fill="#6A4828" stroke="#8A6848" stroke-width="0.8"/><ellipse cx="128" cy="74" rx="16" ry="8" fill="#7A5838" stroke="#9A7858" stroke-width="0.8"/><path d="M64 106 Q81 110 98 106" fill="none" stroke="#C8A060" stroke-width="0.9" opacity="0.5"/><path d="M32 110 Q44 114 56 110" fill="none" stroke="#C8A060" stroke-width="0.8" opacity="0.45"/><path d="M108 110 Q120 114 130 110" fill="none" stroke="#C8A060" stroke-width="0.8" opacity="0.45"/></svg></div>
+      <div class="var-mini-name">Pioppino</div>
+      <div class="var-mini-type">Agrocybe aegerita</div>
+    </div>
+    <div class="var-mini" data-key="black_pearl" onclick="promoteVariety('black_pearl')" style="cursor:pointer" title="Ver Black Pearl King en detalle">
+      <div class="illus-mini"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M62 138 Q60 88 63 68 Q69 54 80 52 Q91 54 97 68 Q100 88 98 138Z" fill="#E8E0D0" stroke="#D0C8B8" stroke-width="0.9"/><path d="M68 138 Q66 88 68 64" fill="none" stroke="#C8C0B0" stroke-width="0.6" opacity="0.4"/><path d="M80 138 Q80 88 80 52" fill="none" stroke="#C8C0B0" stroke-width="0.6" opacity="0.4"/><path d="M92 138 Q94 88 92 64" fill="none" stroke="#C8C0B0" stroke-width="0.6" opacity="0.4"/><path d="M44 58 Q56 38 80 36 Q104 38 116 58 Q112 72 80 74 Q48 72 44 58Z" fill="#1E1E18" stroke="#3A3A30" stroke-width="0.9"/><path d="M56 48 Q80 42 104 52" fill="none" stroke="#5A5A50" stroke-width="0.8" opacity="0.5"/><path d="M52 56 Q80 62 108 56" fill="none" stroke="#4A4A40" stroke-width="0.6" opacity="0.4"/><path d="M52 60 Q80 74 108 60" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.4"/><path d="M56 66 Q80 76 104 66" fill="none" stroke="#E8C4AE" stroke-width="0.5" opacity="0.3"/><ellipse cx="80" cy="138" rx="18" ry="5" fill="#B0A898" stroke="#C8C0B0" stroke-width="0.7"/></svg></div>
+      <div class="var-mini-name">Black Pearl King</div>
+      <div class="var-mini-type">Pleurotus hybrid</div>
+    </div>
+    <div class="var-mini" data-key="chestnut" onclick="promoteVariety('chestnut')" style="cursor:pointer" title="Ver Chestnut en detalle">
+      <div class="illus-mini"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><line x1="34" y1="134" x2="32" y2="92" stroke="#5A3818" stroke-width="2.5" stroke-linecap="round"/><path d="M14 78 Q22 52 46 50 Q62 52 66 66 Q62 78 30 82 Q16 80 14 78Z" fill="#8B5E30" stroke="#A87848" stroke-width="0.9"/><path d="M20 74 Q44 84 62 72" fill="none" stroke="#E8C4AE" stroke-width="0.6" opacity="0.45"/><circle cx="30" cy="60" r="3" fill="#6A4020" opacity="0.7"/><circle cx="42" cy="56" r="2.5" fill="#6A4020" opacity="0.65"/><circle cx="52" cy="58" r="2" fill="#6A4020" opacity="0.6"/><line x1="80" y1="134" x2="78" y2="84" stroke="#5A3818" stroke-width="3" stroke-linecap="round"/><path d="M38 72 Q52 32 80 28 Q108 32 122 56 Q124 72 80 78 Q40 76 38 72Z" fill="#7A5028" stroke="#9A7040" stroke-width="0.9"/><path d="M50 68 Q80 80 110 66" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.5"/><circle cx="62" cy="48" r="3.5" fill="#5A3818" opacity="0.7"/><circle cx="78" cy="40" r="3" fill="#5A3818" opacity="0.65"/><circle cx="94" cy="46" r="3.5" fill="#5A3818" opacity="0.7"/><circle cx="70" cy="56" r="2.5" fill="#5A3818" opacity="0.6"/><circle cx="88" cy="54" r="2.5" fill="#5A3818" opacity="0.6"/><circle cx="106" cy="58" r="2" fill="#5A3818" opacity="0.55"/><line x1="126" y1="134" x2="128" y2="94" stroke="#5A3818" stroke-width="2.5" stroke-linecap="round"/><path d="M96 76 Q108 52 128 52 Q144 54 146 68 Q144 80 118 82 Q98 80 96 76Z" fill="#8B5E30" stroke="#A87848" stroke-width="0.9"/><path d="M102 72 Q124 82 140 72" fill="none" stroke="#E8C4AE" stroke-width="0.6" opacity="0.45"/><circle cx="114" cy="60" r="2.5" fill="#6A4020" opacity="0.65"/><circle cx="126" cy="58" r="2" fill="#6A4020" opacity="0.6"/></svg></div>
+      <div class="var-mini-name">Chestnut</div>
+      <div class="var-mini-type">Pholiota adiposa</div>
+    </div>
+    <div class="var-mini" data-key="enoki" onclick="promoteVariety('enoki')" style="cursor:pointer" title="Ver Enoki Dorado en detalle">
+      <div class="illus-mini"><svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><line x1="52" y1="148" x2="50" y2="58" stroke="#C8A030" stroke-width="1.4" stroke-linecap="round"/><circle cx="50" cy="54" r="7" fill="#E8B830" stroke="#C8A030" stroke-width="0.8"/><line x1="62" y1="148" x2="62" y2="48" stroke="#C8A030" stroke-width="1.3" stroke-linecap="round"/><circle cx="62" cy="44" r="8.5" fill="#F0C840" stroke="#D0A828" stroke-width="0.8"/><line x1="74" y1="148" x2="73" y2="38" stroke="#D0A828" stroke-width="1.5" stroke-linecap="round"/><circle cx="73" cy="34" r="10" fill="#EAC038" stroke="#C8A020" stroke-width="0.9"/><line x1="86" y1="148" x2="87" y2="44" stroke="#C8A030" stroke-width="1.4" stroke-linecap="round"/><circle cx="87" cy="40" r="9" fill="#F0C840" stroke="#D0A828" stroke-width="0.8"/><line x1="98" y1="148" x2="99" y2="52" stroke="#C8A030" stroke-width="1.3" stroke-linecap="round"/><circle cx="99" cy="48" r="8" fill="#E8B830" stroke="#C8A030" stroke-width="0.8"/><line x1="44" y1="148" x2="42" y2="72" stroke="#B89020" stroke-width="1.2" stroke-linecap="round"/><circle cx="42" cy="68" r="6.5" fill="#D8A828" stroke="#B89020" stroke-width="0.7"/><line x1="108" y1="148" x2="110" y2="68" stroke="#B89020" stroke-width="1.2" stroke-linecap="round"/><circle cx="110" cy="64" r="6.5" fill="#D8A828" stroke="#B89020" stroke-width="0.7"/><line x1="36" y1="148" x2="34" y2="90" stroke="#A88018" stroke-width="1.1" stroke-linecap="round"/><circle cx="34" cy="86" r="5.5" fill="#C89820" stroke="#A88018" stroke-width="0.7"/><line x1="116" y1="148" x2="118" y2="86" stroke="#A88018" stroke-width="1.1" stroke-linecap="round"/><circle cx="118" cy="82" r="5.5" fill="#C89820" stroke="#A88018" stroke-width="0.7"/><path d="M28 148 Q80 156 132 148 Q128 142 80 140 Q32 142 28 148Z" fill="#8A6818" stroke="#A88018" stroke-width="0.7"/></svg></div>
+      <div class="var-mini-name">Enoki Dorado</div>
+      <div class="var-mini-type">Flammulina velutipes</div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- BLOG: Hongos en la alta cocina -->
+<section id="blog" style="padding:7rem 4rem;background:var(--cream);border-top:1px solid var(--sand)">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4rem">
+    <div>
+      <div class="sec-label">Recetas y técnica</div>
+      <h2 class="sec-title" style="color:var(--ink)">Recetas y <em style="font-style:italic;color:var(--terra)">cómo incorporarlos en tu menú</em></h2>
+    </div>
+    <p style="font-size:.82rem;color:var(--muted);max-width:240px;line-height:1.7;text-align:right">Ideas concretas para incorporarlos a tu menú o tu cocina diaria.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:2px;background:var(--sand)">
+
+    <!-- Artículo destacado -->
+    <div style="background:var(--ink);padding:3rem;display:flex;flex-direction:column;justify-content:flex-end;min-height:420px;position:relative">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0.12">
+        <svg viewBox="0 0 160 160" style="width:280px;height:280px">
+          <ellipse cx="80" cy="78" rx="48" ry="44" fill="#E8C4AE"/>
+          <line x1="80" y1="122" x2="77" y2="148" stroke="#E8C4AE" stroke-width="2" stroke-linecap="round"/>
+          <line x1="92" y1="118" x2="97" y2="145" stroke="#E8C4AE" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="68" y1="118" x2="63" y2="145" stroke="#E8C4AE" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="108" y1="106" x2="118" y2="128" stroke="#E8C4AE" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="52" y1="106" x2="42" y2="128" stroke="#E8C4AE" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span style="font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--terra-l);margin-bottom:.75rem;display:block">Receta · Melena de León</span>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;color:var(--cream);line-height:1.15;margin-bottom:1rem">Medallón de Melena de León con beurre noisette y alcaparras</h3>
+      <p style="font-size:.82rem;color:rgba(240,237,228,.6);line-height:1.75;margin-bottom:1.5rem">El único hongo que se comporta como un medallón de carne o de pescado. Sellado en plancha de hierro, bañado en manteca avellana con alcaparras y limón. Una preparación que impresiona sin complejidad técnica excesiva.</p>
+      <div style="display:flex;align-items:center;gap:1.5rem">
+        <span style="font-size:.7rem;color:rgba(240,237,228,.4);letter-spacing:.08em">⏱ 20 min &nbsp;·&nbsp; Dificultad media</span>
+        <a href="#guia" style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-l);text-decoration:none;border-bottom:1px solid rgba(232,196,174,.3);padding-bottom:1px">Leer receta →</a>
+      </div>
+    </div>
+
+    <!-- Artículo 2 -->
+    <div style="background:var(--warm);padding:2rem;display:flex;flex-direction:column;justify-content:space-between">
+      <div>
+        <div style="background:var(--ink);padding:1.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem">
+          <svg viewBox="0 0 160 160" style="width:80px;height:80px;opacity:0.8">
+            <path d="M16 76 Q24 38 80 30 Q136 38 144 76 Q140 88 80 92 Q20 88 16 76Z" fill="#7A3610" stroke="#B5541E" stroke-width="1.2"/>
+            <path d="M70 92 Q68 116 66 130 Q74 134 88 134 Q92 116 90 92Z" fill="#5A2A0E" stroke="#7A3610" stroke-width="0.9"/>
+          </svg>
+        </div>
+        <span style="font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);display:block;margin-bottom:.5rem">Receta · Shiitake</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:.75rem">Risotto de Shiitake y Pioppino con parmesano</h3>
+        <p style="font-size:.78rem;color:var(--muted);line-height:1.7">El arroz que absorbe el umami del Shiitake y el aroma a nuez del Pioppino. Mantecado en frío fuera del fuego para esa textura cremosa sin crema.</p>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--sand);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:.68rem;color:var(--muted)">⏱ 35 min &nbsp;·&nbsp; Media</span>
+        <a href="#guia" style="font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);text-decoration:none">Receta →</a>
+      </div>
+    </div>
+
+    <!-- Artículo 3 -->
+    <div style="background:var(--warm);padding:2rem;display:flex;flex-direction:column;justify-content:space-between">
+      <div>
+        <div style="background:var(--ink);padding:1.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem">
+          <svg viewBox="0 0 160 160" style="width:80px;height:80px;opacity:0.8">
+            <path d="M62 138 Q60 88 63 68 Q69 54 80 52 Q91 54 97 68 Q100 88 98 138Z" fill="#C8A882" stroke="#E8C4AE" stroke-width="0.9"/>
+            <path d="M46 60 Q58 42 80 40 Q102 42 114 60 Q110 72 80 74 Q50 72 46 60Z" fill="#A07850" stroke="#C8A882" stroke-width="0.9"/>
+          </svg>
+        </div>
+        <span style="font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);display:block;margin-bottom:.5rem">Receta · King Oyster</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:.75rem">King Oyster a la plancha con puré ahumado</h3>
+        <p style="font-size:.78rem;color:var(--muted);line-height:1.7">Rodajas de 2 cm selladas sin aceite hasta costra dorada. Manteca de hierbas, jugo de limón y puré de papa con pimentón ahumado.</p>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--sand);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:.68rem;color:var(--muted)">⏱ 30 min &nbsp;·&nbsp; Fácil</span>
+        <a href="#guia" style="font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);text-decoration:none">Receta →</a>
+      </div>
+    </div>
+
+    <!-- Artículo 4 -->
+    <div style="background:var(--cream);padding:2rem;border-top:2px solid var(--sand);display:flex;flex-direction:column;justify-content:space-between">
+      <div>
+        <span style="font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);display:block;margin-bottom:.5rem">Técnica · Gírgola Rosa</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:.6rem">Gírgola Rosa como protagonista visual del plato</h3>
+        <p style="font-size:.76rem;color:var(--muted);line-height:1.7">Cómo usar su color coral para hacer un plato impactante. Breve escaldado, aceite de oliva virgen, ralladura de limón. El hongo que más preguntas genera en la mesa.</p>
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--sand);display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:.68rem;color:var(--muted)">⏱ 10 min &nbsp;·&nbsp; Muy fácil</span>
+        <a href="#guia" style="font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);text-decoration:none">Técnica →</a>
+      </div>
+    </div>
+
+    <!-- Artículo 5 -->
+    <div style="background:var(--cream);padding:2rem;border-top:2px solid var(--sand);grid-column:span 2;display:flex;gap:2rem;align-items:center">
+      <div style="background:var(--ink);padding:2rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;width:120px;height:120px">
+        <svg viewBox="0 0 160 160" style="width:80px;height:80px;opacity:0.8">
+          <line x1="74" y1="148" x2="73" y2="38" stroke="#D0A828" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="73" cy="34" r="10" fill="#EAC038" stroke="#C8A020" stroke-width="0.9"/>
+          <line x1="86" y1="148" x2="87" y2="44" stroke="#C8A030" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="87" cy="40" r="9" fill="#F0C840" stroke="#D0A828" stroke-width="0.8"/>
+          <line x1="62" y1="148" x2="62" y2="48" stroke="#C8A030" stroke-width="1.3" stroke-linecap="round"/>
+          <circle cx="62" cy="44" r="8.5" fill="#F0C840" stroke="#D0A828" stroke-width="0.8"/>
+          <path d="M48 148 Q80 156 112 148 Q108 142 80 140 Q52 142 48 148Z" fill="#8A6818"/>
+        </svg>
+      </div>
+      <div style="flex:1">
+        <span style="font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);display:block;margin-bottom:.5rem">Receta · Enoki Dorado</span>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:.6rem">Caldo dashi de Shiitake con Enoki dorado y tare de soja</h3>
+        <p style="font-size:.76rem;color:var(--muted);line-height:1.7">La base de la cocina japonesa, hecha en casa. Shiitake deshidratado en agua fría durante 30 minutos, caldo limpio a fuego suave, Enoki fresco encima. Un plato que parece difícil y no lo es.</p>
+        <div style="margin-top:.85rem;display:flex;gap:1.5rem;align-items:center">
+          <span style="font-size:.68rem;color:var(--muted)">⏱ 45 min &nbsp;·&nbsp; Media</span>
+          <a href="#guia" style="font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);text-decoration:none">Receta completa →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- GUÍA PDF -->
+<section id="guia">
+  <div class="guia-inner">
+    <div class="guia-visual" style="background:#1A1A18;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+  <!-- Textura sutil de fondo -->
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, rgba(181,84,30,0.12) 0%, transparent 70%);pointer-events:none"></div>
+  <!-- Portada del PDF -->
+  <div style="position:relative;z-index:2;width:260px;background:#F0EDE4;box-shadow:0 32px 80px rgba(0,0,0,0.5)">
+    <!-- Franja terracota izquierda -->
+    <div style="position:absolute;top:0;left:0;width:7px;height:100%;background:#B5541E"></div>
+    <!-- Contenido portada -->
+    <div style="padding:2.5rem 2rem 2rem 2.5rem">
+      <div style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#B5541E;margin-bottom:.75rem;font-family:sans-serif">Hongos del Bosque</div>
+      <div style="height:1px;background:#D8D0BC;margin-bottom:1.25rem"></div>
+      <div style="font-family:Georgia,serif;font-size:1.5rem;font-weight:300;line-height:1.2;color:#1A1A18;margin-bottom:.25rem">Guía completa</div>
+      <div style="font-family:Georgia,serif;font-size:1.5rem;font-weight:300;line-height:1.2;color:#1A1A18;margin-bottom:.25rem">de cocina con</div>
+      <div style="font-family:Georgia,serif;font-size:1.65rem;font-weight:300;font-style:italic;color:#B5541E;margin-bottom:1.25rem">setas</div>
+      <div style="height:1px;background:#D8D0BC;margin-bottom:1.25rem"></div>
+      <!-- Ilustración Melena de León pequeña -->
+      <div style="display:flex;justify-content:center;margin-bottom:1.25rem">
+        <svg viewBox="0 0 100 80" style="width:90px;height:72px">
+          <ellipse cx="50" cy="36" rx="32" ry="28" fill="#D8C8A8" stroke="#E8C4AE" stroke-width="0.7"/>
+          <path d="M32 36 Q50 28 68 36" fill="none" stroke="#F0EDE4" stroke-width="0.6" opacity="0.5"/>
+          <line x1="50" y1="64" x2="48" y2="76" stroke="#E8C4AE" stroke-width="1" stroke-linecap="round"/>
+          <line x1="56" y1="62" x2="58" y2="74" stroke="#E8C4AE" stroke-width="0.9" stroke-linecap="round"/>
+          <line x1="44" y1="62" x2="42" y2="74" stroke="#E8C4AE" stroke-width="0.9" stroke-linecap="round"/>
+          <line x1="62" y1="58" x2="66" y2="70" stroke="#C8A882" stroke-width="0.8" stroke-linecap="round"/>
+          <line x1="38" y1="58" x2="34" y2="70" stroke="#C8A882" stroke-width="0.8" stroke-linecap="round"/>
+          <line x1="68" y1="50" x2="74" y2="62" stroke="#B5A080" stroke-width="0.7" stroke-linecap="round"/>
+          <line x1="32" y1="50" x2="26" y2="62" stroke="#B5A080" stroke-width="0.7" stroke-linecap="round"/>
+          <path d="M38 62 Q50 68 62 62" fill="#B5A080" stroke="none"/>
+        </svg>
+      </div>
+      <div style="height:1px;background:#D8D0BC;margin-bottom:1rem"></div>
+      <!-- Tag -->
+      <div style="background:#B5541E;color:white;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .75rem;display:inline-block;font-family:sans-serif;margin-bottom:.85rem">PDF Gratuito</div>
+      <div style="font-size:.68rem;color:#8A8578;font-family:sans-serif;line-height:1.5">10 páginas · 6 recetas<br>Maridajes · Técnicas esenciales</div>
+    </div>
+  </div>
+</div>
+    <div class="guia-text">
+      <div class="sec-label">Recursos gratuitos</div>
+      <h2>El paso a paso para<br>cocinar con<br><em>hongos gourmet</em></h2>
+      <p>Preparamos una guía práctica con técnicas, recetas y maridajes para que incorpores los hongos gourmet a tu cocina. Descargala gratis — te la enviamos directo al mail.</p>
+      <ul class="guia-includes">
+        <li><span class="guia-check">✓</span> Las 6 variedades: carácter, sabor y usos</li>
+        <li><span class="guia-check">✓</span> Las 5 técnicas esenciales de cocción</li>
+        <li><span class="guia-check">✓</span> 6 recetas de 3 niveles de dificultad</li>
+        <li><span class="guia-check">✓</span> Tabla de maridajes: qué va con qué</li>
+        <li><span class="guia-check">✓</span> Errores comunes y cómo evitarlos</li>
+      </ul>
+      <form class="guia-form" onsubmit="handleGuiaSubmit(event)">
+        <div class="guia-form-row">
+          <div class="guia-form-group">
+            <label>Tu nombre</label>
+            <input type="text" placeholder="María García" required>
+          </div>
+          <div class="guia-form-group">
+            <label>Tu email</label>
+            <input type="email" id="guia-email" placeholder="tu@email.com" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-terra" style="align-self:flex-start;margin-top:.5rem">Recibir la guía gratis →</button>
+        <p style="font-size:.7rem;color:var(--muted);margin-top:.75rem;margin-bottom:0;">Te la enviamos por mail. Sin spam, sin compromisos.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- B2B / RESTAURANTES -->
+<section id="restaurantes">
+  <div class="b2b-text">
+    <div class="sec-label">Tu próximo proveedor gourmet</div>
+    <h2>Un proveedor que<br><em>entiende</em> tu cocina.</h2>
+    <p class="b2b-sub">Para chefs y restaurantes que no se conforman con cualquier ingrediente.</p>
+    <p>Trabajamos con cocineros y restaurantes que buscan algo más que un insumo: consistencia, variedad, y un producto con identidad. Nuestro abastecimiento semanal garantiza frescura para que planifiques tu carta con tranquilidad.</p>
+    <ul class="b2b-feats">
+      <li><span class="feat-ok">✓</span><div><span class="feat-title">Entrega semanal en Buenos Aires</span><span class="feat-desc">Hongos frescos con trazabilidad y consistencia garantizada.</span></div></li>
+      <li><span class="feat-ok">✓</span><div><span class="feat-title">Variedades que no conseguís en cualquier lado</span><span class="feat-desc">Acceso a especies premium fuera del mercado masivo.</span></div></li>
+      <li><span class="feat-ok">✓</span><div><span class="feat-title">Asesoría gastronómica incluida</span><span class="feat-desc">Te ayudamos a incorporarlos al menú: ideas, maridajes y técnicas.</span></div></li>
+      <li><span class="feat-ok">✓</span><div><span class="feat-title">Un plan armado según tu cocina</span><span class="feat-desc">Analizamos tu operación y te proponemos variedades, volumen y frecuencia a medida.</span></div></li>
+    </ul>
+    <a href="#contacto" class="btn-primary">Contactanos</a>
+  </div>
+  <div class="b2b-visual">
+    <img class="b2b-img-main" src="chef_hongos.jpg" style="object-position:40% 15%" alt="Chef cocinando" style="object-position:40% 15%">
+    <img class="b2b-img-sec"
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Agrocybe_aegerita_1.jpg/320px-Agrocybe_aegerita_1.jpg"
+      alt="Pioppino fresco"
+      onerror="this.style.display='none'">
+    <div class="b2b-badge"><span class="big">9+</span><span class="small">variedades premium</span></div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div>
+    <div class="sec-label-light">Tu próximo proveedor gourmet</div>
+    <h2 class="contact-h2">¿Buscás ingredientes<br>que hagan<br><em>la diferencia</em>?</h2>
+    <p class="contact-p">Contanos sobre tu cocina. Armamos propuestas a medida según volumen, variedades y frecuencia de entrega.</p>
+    <ul class="contact-perks">
+      <li><span class="perk-dot"></span>Entregas en Buenos Aires y GBA</li>
+      <li><span class="perk-dot"></span>Plan personalizado según tu operación</li>
+      <li><span class="perk-dot"></span>Facturación disponible</li>
+      <li><span class="perk-dot"></span>Propuestas a medida según volumen</li>
+      <li><span class="perk-dot"></span>Asesoría gastronómica sin costo</li>
+    </ul>
+  </div>
+  <form class="contact-form" onsubmit="handleSubmit(event)">
+    <div class="form-row">
+      <div class="form-group"><label>Tu nombre</label><input type="text" placeholder="Ej: Martín García"></div>
+      <div class="form-group"><label>Restaurante o proyecto</label><input type="text" placeholder="Nombre del local"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>WhatsApp</label><input type="tel" placeholder="+54 11 ..."></div>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="tu@email.com"></div>
+    </div>
+    <div class="form-group">
+      <label>Tipo de cocina</label>
+      <select><option value="">Seleccioná una opción</option><option>Cocina de autor / fine dining</option><option>Cocina italiana</option><option>Cocina japonesa / asiática</option><option>Cocina vegetariana / vegana</option><option>Bistró / cocina de mercado</option><option>Otro</option></select>
+    </div>
+    <div class="form-group">
+      <label>¿Qué hongos te interesan?</label>
+      <select><option value="">Seleccioná</option><option>Shiitake</option><option>King Oyster / Eryngii</option><option>Melena de León</option><option>Gírgolas / Oyster</option><option>Gírgola Rosa</option><option>Pioppino</option><option>Quiero conocer todo el catálogo</option></select>
+    </div>
+    <div class="form-group"><label>Contanos más</label><textarea placeholder="Volumen aproximado, frecuencia de entrega, preguntas..."></textarea></div>
+    <button type="submit" class="form-submit">Enviar consulta</button>
+  </form>
+</section>
+
+<!-- TIENDA -->
+<section id="tienda">
+  <div class="shop-header">
+    <div><div class="sec-label">Tienda</div><h2 class="sec-title">Nuestros <em style="font-style:italic;color:var(--terra)">productos</em></h2></div>
+    <div class="shop-filter">
+      <button class="filter-btn active" onclick="filterProducts('todos',this)">Todos</button>
+      <button class="filter-btn" onclick="filterProducts('frescos',this)">Frescos</button>
+      <button class="filter-btn" onclick="filterProducts('secos',this)">Secos</button>
+      <button class="filter-btn" onclick="filterProducts('polvo',this)">En polvo</button>
+    </div>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="about-grid">
+    <div class="about-block"><div class="about-num">9+</div><div class="about-label">Variedades gourmet</div></div>
+    <div class="about-block dark"><div class="about-num">100%</div><div class="about-label">Cultivo artesanal</div></div>
+    <div class="about-block dark"><div class="about-num">BsAs</div><div class="about-label">Producción local</div></div>
+    <div class="about-block"><div class="about-num">3</div><div class="about-label">Formatos disponibles</div></div>
+    <div class="about-block terra"><div class="about-label">Nuestra misión</div><div class="about-num">"Inspiramos a las personas a descubrir los hongos como alimento."</div></div>
+  </div>
+  <div class="about-text">
+    <div class="sec-label">Quiénes somos</div>
+    <h2>Más que<br>un productor.<br><em>Una marca.</em></h2>
+    <p class="about-mision">"Inspiramos a las personas a descubrir los hongos como alimento."</p>
+    <p>Hongos del Bosque nació de la convicción de que los hongos gourmet merecen un lugar central en la gastronomía argentina. No como curiosidad, sino como ingrediente cotidiano de quienes cocinan bien.</p>
+    <p>Cultivamos de forma artesanal una selección de variedades premium: desde el umami profundo del Shiitake hasta la textura carnosa del King Oyster o las propiedades únicas de la Melena de León.</p>
+    <p>Combinamos producto, educación y narrativa. Porque vender un hongo sin contexto es vender la mitad de la experiencia.</p>
+    <a href="#contacto" class="btn-primary" style="margin-top:1.5rem;display:inline-block;">Contactanos</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <span class="footer-logo">hongos del bosque</span>
+      <p class="footer-desc">Cultivamos y distribuimos hongos gourmet para restaurantes y amantes de la gastronomía. Buenos Aires, Argentina.</p>
+    </div>
+    <div class="footer-col"><h4>Navegá</h4><ul><li><a href="#variedades">Variedades</a></li><li><a href="#blog">Recetas</a></li>
+    <li><a href="#guia">Guía gratis</a></li><li><a href="#restaurantes">Para restaurantes</a></li><li><a href="#tienda">Tienda</a></li></ul></div>
+    <div class="footer-col"><h4>Productos</h4><ul><li><a href="#">Hongos frescos</a></li><li><a href="#">Hongos secos</a></li><li><a href="#">En polvo</a></li><li><a href="#">Suplementos</a></li></ul></div>
+    <div class="footer-col"><h4>Contacto</h4><ul><li><a href="#">Instagram</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Newsletter</a></li><li><a href="#contacto">Consultas B2B</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2025 Hongos del Bosque — Todos los derechos reservados</span><span>Buenos Aires, Argentina</span></div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+function getSVGDataURI(key) {
+  const svgs = {
+    shiitake: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M16 76 Q24 38 80 30 Q136 38 144 76 Q140 88 80 92 Q20 88 16 76Z" fill="#7A3610" stroke="#B5541E" stroke-width="1.2"/><path d="M80 30 Q70 56 68 92" fill="none" stroke="#B5541E" stroke-width="0.7" opacity="0.5"/><path d="M80 30 Q90 56 92 92" fill="none" stroke="#B5541E" stroke-width="0.7" opacity="0.5"/><path d="M80 30 Q56 48 42 80" fill="none" stroke="#B5541E" stroke-width="0.6" opacity="0.4"/><path d="M80 30 Q104 48 118 80" fill="none" stroke="#B5541E" stroke-width="0.6" opacity="0.4"/><path d="M80 30 Q42 44 26 72" fill="none" stroke="#B5541E" stroke-width="0.5" opacity="0.3"/><path d="M80 30 Q118 44 134 72" fill="none" stroke="#B5541E" stroke-width="0.5" opacity="0.3"/><path d="M24 80 Q80 100 136 80" fill="none" stroke="#E8C4AE" stroke-width="0.9" opacity="0.55"/><path d="M70 92 Q68 116 66 130 Q74 134 88 134 Q92 116 90 92Z" fill="#5A2A0E" stroke="#7A3610" stroke-width="0.9"/><ellipse cx="79" cy="112" rx="12" ry="3.5" fill="none" stroke="#E8C4AE" stroke-width="0.9" opacity="0.65"/></svg>`,
+    king_oyster: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M62 138 Q60 88 63 68 Q69 54 80 52 Q91 54 97 68 Q100 88 98 138Z" fill="#C8A882" stroke="#E8C4AE" stroke-width="0.9"/><path d="M68 138 Q66 88 68 64" fill="none" stroke="#F0EDE4" stroke-width="0.6" opacity="0.3"/><path d="M80 138 Q80 88 80 52" fill="none" stroke="#F0EDE4" stroke-width="0.6" opacity="0.3"/><path d="M92 138 Q94 88 92 64" fill="none" stroke="#F0EDE4" stroke-width="0.6" opacity="0.3"/><path d="M46 60 Q58 42 80 40 Q102 42 114 60 Q110 72 80 74 Q50 72 46 60Z" fill="#A07850" stroke="#C8A882" stroke-width="0.9"/><path d="M54 62 Q80 74 106 62" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.5"/><path d="M58 67 Q80 77 102 67" fill="none" stroke="#E8C4AE" stroke-width="0.5" opacity="0.35"/><ellipse cx="80" cy="138" rx="18" ry="5" fill="#7A5530" stroke="#A07850" stroke-width="0.7"/></svg>`,
+    lion_mane: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><ellipse cx="80" cy="78" rx="48" ry="44" fill="#D8C8A8" stroke="#E8C4AE" stroke-width="0.9"/><path d="M48 78 Q80 66 112 78" fill="none" stroke="#F0EDE4" stroke-width="0.7" opacity="0.45"/><path d="M42 86 Q80 74 118 86" fill="none" stroke="#F0EDE4" stroke-width="0.5" opacity="0.35"/><line x1="80" y1="122" x2="77" y2="148" stroke="#E8C4AE" stroke-width="1.3" stroke-linecap="round"/><line x1="88" y1="120" x2="91" y2="146" stroke="#E8C4AE" stroke-width="1.2" stroke-linecap="round"/><line x1="72" y1="120" x2="68" y2="146" stroke="#E8C4AE" stroke-width="1.2" stroke-linecap="round"/><line x1="98" y1="115" x2="104" y2="140" stroke="#D8B890" stroke-width="1.1" stroke-linecap="round"/><line x1="62" y1="115" x2="56" y2="140" stroke="#D8B890" stroke-width="1.1" stroke-linecap="round"/><line x1="110" y1="106" x2="120" y2="130" stroke="#C8A882" stroke-width="1" stroke-linecap="round"/><line x1="50" y1="106" x2="40" y2="129" stroke="#C8A882" stroke-width="1" stroke-linecap="round"/><line x1="120" y1="94" x2="134" y2="114" stroke="#B5A080" stroke-width="0.9" stroke-linecap="round"/><line x1="40" y1="94" x2="26" y2="113" stroke="#B5A080" stroke-width="0.9" stroke-linecap="round"/><line x1="84" y1="121" x2="83" y2="150" stroke="#D8B890" stroke-width="1" stroke-linecap="round"/><line x1="94" y1="118" x2="97" y2="146" stroke="#C8A882" stroke-width="0.9" stroke-linecap="round"/><line x1="66" y1="118" x2="62" y2="146" stroke="#C8A882" stroke-width="0.9" stroke-linecap="round"/><path d="M62 120 Q80 128 98 120" fill="#B5A080" stroke="none"/></svg>`,
+    girgola: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M16 88 Q26 52 58 50 Q74 52 78 70 Q74 84 36 90 Q20 90 16 88Z" fill="#505048" stroke="#7A7870" stroke-width="0.9"/><path d="M45 90 Q46 112 48 126" fill="none" stroke="#3A3A34" stroke-width="4.5" stroke-linecap="round"/><path d="M27 84 Q52 94 74 78" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.5"/><path d="M40 78 Q54 34 80 28 Q106 34 120 58 Q122 74 80 82 Q42 82 40 78Z" fill="#404038" stroke="#686860" stroke-width="0.9"/><path d="M74 82 Q73 110 71 130" fill="none" stroke="#303028" stroke-width="5.5" stroke-linecap="round"/><path d="M53 76 Q80 88 108 70" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.55"/><path d="M58 80 Q80 90 106 76" fill="none" stroke="#E8C4AE" stroke-width="0.5" opacity="0.4"/><path d="M86 72 Q100 46 122 48 Q142 52 144 70 Q142 82 110 86 Q88 84 86 72Z" fill="#555550" stroke="#7A7870" stroke-width="0.9"/><path d="M115 86 Q117 106 118 120" fill="none" stroke="#3A3A34" stroke-width="4" stroke-linecap="round"/><path d="M94 76 Q114 84 136 72" fill="none" stroke="#E8C4AE" stroke-width="0.6" opacity="0.45"/></svg>`,
+    girgola_rosa: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M16 86 Q28 52 58 50 Q74 54 76 70 Q72 82 34 88 Q18 88 16 86Z" fill="#C85878" stroke="#E87898" stroke-width="0.9"/><path d="M44 88 Q45 110 46 124" fill="none" stroke="#A03858" stroke-width="4.5" stroke-linecap="round"/><path d="M28 82 Q52 90 72 76" fill="none" stroke="#F0C0D0" stroke-width="0.7" opacity="0.6"/><path d="M40 76 Q54 34 80 28 Q106 34 122 58 Q124 74 80 80 Q40 80 40 76Z" fill="#B84868" stroke="#D87090" stroke-width="0.9"/><path d="M74 80 Q72 110 70 128" fill="none" stroke="#883050" stroke-width="5.5" stroke-linecap="round"/><path d="M54 74 Q80 84 108 68" fill="none" stroke="#F0C0D0" stroke-width="0.7" opacity="0.6"/><path d="M58 78 Q80 86 106 74" fill="none" stroke="#F0C0D0" stroke-width="0.5" opacity="0.45"/><path d="M88 70 Q100 46 124 48 Q142 52 144 68 Q142 80 110 84 Q90 82 88 70Z" fill="#C05070" stroke="#E07898" stroke-width="0.9"/><path d="M113 84 Q115 102 116 118" fill="none" stroke="#A03858" stroke-width="4" stroke-linecap="round"/><path d="M96 74 Q115 82 136 70" fill="none" stroke="#F0C0D0" stroke-width="0.6" opacity="0.5"/></svg>`,
+    pioppino: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><line x1="36" y1="134" x2="34" y2="88" stroke="#4A3020" stroke-width="2.8" stroke-linecap="round"/><line x1="48" y1="134" x2="50" y2="80" stroke="#4A3020" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="34" cy="84" rx="18" ry="9" fill="#6A4828" stroke="#8A6848" stroke-width="0.8"/><ellipse cx="50" cy="76" rx="16" ry="8" fill="#7A5838" stroke="#9A7858" stroke-width="0.8"/><line x1="70" y1="134" x2="68" y2="72" stroke="#4A3020" stroke-width="3.2" stroke-linecap="round"/><line x1="82" y1="134" x2="84" y2="62" stroke="#4A3020" stroke-width="2.8" stroke-linecap="round"/><line x1="94" y1="134" x2="96" y2="76" stroke="#4A3020" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="68" cy="68" rx="20" ry="10" fill="#5A3818" stroke="#8A5830" stroke-width="0.9"/><ellipse cx="84" cy="58" rx="22" ry="11" fill="#4A2E14" stroke="#7A4828" stroke-width="0.9"/><ellipse cx="96" cy="72" rx="17" ry="8.5" fill="#623820" stroke="#8A5830" stroke-width="0.8"/><path d="M66 60 Q84 52 102 58" fill="none" stroke="#C8A060" stroke-width="0.7" opacity="0.4"/><line x1="114" y1="134" x2="112" y2="86" stroke="#4A3020" stroke-width="2.8" stroke-linecap="round"/><line x1="126" y1="134" x2="128" y2="78" stroke="#4A3020" stroke-width="2.4" stroke-linecap="round"/><ellipse cx="112" cy="82" rx="18" ry="9" fill="#6A4828" stroke="#8A6848" stroke-width="0.8"/><ellipse cx="128" cy="74" rx="16" ry="8" fill="#7A5838" stroke="#9A7858" stroke-width="0.8"/><path d="M64 106 Q81 110 98 106" fill="none" stroke="#C8A060" stroke-width="0.9" opacity="0.5"/><path d="M32 110 Q44 114 56 110" fill="none" stroke="#C8A060" stroke-width="0.8" opacity="0.45"/><path d="M108 110 Q120 114 130 110" fill="none" stroke="#C8A060" stroke-width="0.8" opacity="0.45"/></svg>`,
+    black_pearl: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><path d="M62 138 Q60 88 63 68 Q69 54 80 52 Q91 54 97 68 Q100 88 98 138Z" fill="#E8E0D0" stroke="#D0C8B8" stroke-width="0.9"/><path d="M68 138 Q66 88 68 64" fill="none" stroke="#C8C0B0" stroke-width="0.6" opacity="0.4"/><path d="M80 138 Q80 88 80 52" fill="none" stroke="#C8C0B0" stroke-width="0.6" opacity="0.4"/><path d="M92 138 Q94 88 92 64" fill="none" stroke="#C8C0B0" stroke-width="0.6" opacity="0.4"/><path d="M44 58 Q56 38 80 36 Q104 38 116 58 Q112 72 80 74 Q48 72 44 58Z" fill="#1E1E18" stroke="#3A3A30" stroke-width="0.9"/><path d="M56 48 Q80 42 104 52" fill="none" stroke="#5A5A50" stroke-width="0.8" opacity="0.5"/><path d="M52 56 Q80 62 108 56" fill="none" stroke="#4A4A40" stroke-width="0.6" opacity="0.4"/><path d="M52 60 Q80 74 108 60" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.4"/><path d="M56 66 Q80 76 104 66" fill="none" stroke="#E8C4AE" stroke-width="0.5" opacity="0.3"/><ellipse cx="80" cy="138" rx="18" ry="5" fill="#B0A898" stroke="#C8C0B0" stroke-width="0.7"/></svg>`,
+    chestnut: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><line x1="34" y1="134" x2="32" y2="92" stroke="#5A3818" stroke-width="2.5" stroke-linecap="round"/><path d="M14 78 Q22 52 46 50 Q62 52 66 66 Q62 78 30 82 Q16 80 14 78Z" fill="#8B5E30" stroke="#A87848" stroke-width="0.9"/><path d="M20 74 Q44 84 62 72" fill="none" stroke="#E8C4AE" stroke-width="0.6" opacity="0.45"/><circle cx="30" cy="60" r="3" fill="#6A4020" opacity="0.7"/><circle cx="42" cy="56" r="2.5" fill="#6A4020" opacity="0.65"/><circle cx="52" cy="58" r="2" fill="#6A4020" opacity="0.6"/><line x1="80" y1="134" x2="78" y2="84" stroke="#5A3818" stroke-width="3" stroke-linecap="round"/><path d="M38 72 Q52 32 80 28 Q108 32 122 56 Q124 72 80 78 Q40 76 38 72Z" fill="#7A5028" stroke="#9A7040" stroke-width="0.9"/><path d="M50 68 Q80 80 110 66" fill="none" stroke="#E8C4AE" stroke-width="0.7" opacity="0.5"/><circle cx="62" cy="48" r="3.5" fill="#5A3818" opacity="0.7"/><circle cx="78" cy="40" r="3" fill="#5A3818" opacity="0.65"/><circle cx="94" cy="46" r="3.5" fill="#5A3818" opacity="0.7"/><circle cx="70" cy="56" r="2.5" fill="#5A3818" opacity="0.6"/><circle cx="88" cy="54" r="2.5" fill="#5A3818" opacity="0.6"/><circle cx="106" cy="58" r="2" fill="#5A3818" opacity="0.55"/><line x1="126" y1="134" x2="128" y2="94" stroke="#5A3818" stroke-width="2.5" stroke-linecap="round"/><path d="M96 76 Q108 52 128 52 Q144 54 146 68 Q144 80 118 82 Q98 80 96 76Z" fill="#8B5E30" stroke="#A87848" stroke-width="0.9"/><path d="M102 72 Q124 82 140 72" fill="none" stroke="#E8C4AE" stroke-width="0.6" opacity="0.45"/><circle cx="114" cy="60" r="2.5" fill="#6A4020" opacity="0.65"/><circle cx="126" cy="58" r="2" fill="#6A4020" opacity="0.6"/></svg>`,
+    enoki: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg"><line x1="52" y1="148" x2="50" y2="58" stroke="#C8A030" stroke-width="1.4" stroke-linecap="round"/><circle cx="50" cy="54" r="7" fill="#E8B830" stroke="#C8A030" stroke-width="0.8"/><line x1="62" y1="148" x2="62" y2="48" stroke="#C8A030" stroke-width="1.3" stroke-linecap="round"/><circle cx="62" cy="44" r="8.5" fill="#F0C840" stroke="#D0A828" stroke-width="0.8"/><line x1="74" y1="148" x2="73" y2="38" stroke="#D0A828" stroke-width="1.5" stroke-linecap="round"/><circle cx="73" cy="34" r="10" fill="#EAC038" stroke="#C8A020" stroke-width="0.9"/><line x1="86" y1="148" x2="87" y2="44" stroke="#C8A030" stroke-width="1.4" stroke-linecap="round"/><circle cx="87" cy="40" r="9" fill="#F0C840" stroke="#D0A828" stroke-width="0.8"/><line x1="98" y1="148" x2="99" y2="52" stroke="#C8A030" stroke-width="1.3" stroke-linecap="round"/><circle cx="99" cy="48" r="8" fill="#E8B830" stroke="#C8A030" stroke-width="0.8"/><line x1="44" y1="148" x2="42" y2="72" stroke="#B89020" stroke-width="1.2" stroke-linecap="round"/><circle cx="42" cy="68" r="6.5" fill="#D8A828" stroke="#B89020" stroke-width="0.7"/><line x1="108" y1="148" x2="110" y2="68" stroke="#B89020" stroke-width="1.2" stroke-linecap="round"/><circle cx="110" cy="64" r="6.5" fill="#D8A828" stroke="#B89020" stroke-width="0.7"/><line x1="36" y1="148" x2="34" y2="90" stroke="#A88018" stroke-width="1.1" stroke-linecap="round"/><circle cx="34" cy="86" r="5.5" fill="#C89820" stroke="#A88018" stroke-width="0.7"/><line x1="116" y1="148" x2="118" y2="86" stroke="#A88018" stroke-width="1.1" stroke-linecap="round"/><circle cx="118" cy="82" r="5.5" fill="#C89820" stroke="#A88018" stroke-width="0.7"/><path d="M28 148 Q80 156 132 148 Q128 142 80 140 Q32 142 28 148Z" fill="#8A6818" stroke="#A88018" stroke-width="0.7"/></svg>`
+  };
+  const svg = svgs[key] || svgs['shiitake'];
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+const WIKI = 'https://upload.wikimedia.org/wikipedia/commons/thumb/';
+const products = [
+  { id:1, category:'frescos', variety:'Frescos', name:'Shiitake fresco', desc:'Sabor umami profundo, ideal para salteados y caldos. Textura carnosa y aromática.', price:'$2.800', tag:'Más pedido', img: getSVGDataURI('shiitake') },
+  { id:2, category:'frescos', variety:'Frescos', name:'King Oyster', desc:'Textura firme, perfecta a la plancha. El favorito de los chefs de cocina de autor.', price:'$3.200', tag:null, img: getSVGDataURI('king_oyster') },
+  { id:3, category:'frescos', variety:'Frescos', name:'Melena de León', desc:'Sabor marino, parecido al cangrejo. Funcional, único, impresionante en el plato.', price:'$4.500', tag:'Premium', img: getSVGDataURI('lion_mane') },
+  { id:4, category:'frescos', variety:'Frescos', name:'Gírgola fresca', desc:'Color grisáceo y textura sedosa. Sabor suave, versátil en cualquier preparación.', price:'$2.200', tag:null, img: getSVGDataURI('girgola') },
+  { id:5, category:'frescos', variety:'Frescos', name:'Gírgola Rosa', desc:'Color coral vibrante, sabor suave. Visualmente impactante, ideal para presentaciones.', price:'$2.600', tag:'Exclusiva', img: getSVGDataURI('girgola_rosa') },
+  { id:6, category:'frescos', variety:'Frescos', name:'Pioppino', desc:'Aroma profundo a nuez. Ideal en salsas, pastas y guisos de alta cocina.', price:'$2.900', tag:null, img: getSVGDataURI('pioppino') },
+  { id:7, category:'frescos', variety:'Frescos', name:'Black Pearl King', desc:'Sombrero casi negro, pie blanco firme. Alto impacto visual en el plato.', price:'$3.400', tag:null, img: getSVGDataURI('black_pearl') },
+  { id:8, category:'frescos', variety:'Frescos', name:'Chestnut', desc:'Sabor a nuez, textura carnosa. Escamas características, aspecto premium.', price:'$2.700', tag:null, img: getSVGDataURI('chestnut') },
+  { id:9, category:'frescos', variety:'Frescos', name:'Enoki Dorado', desc:'Tallos finos y dorados, sombreros pequeños. Delicado, crujiente, muy visual.', price:'$2.800', tag:'Exclusivo', img: getSVGDataURI('enoki') },
+  { id:10, category:'secos', variety:'Secos', name:'Shiitake deshidratado', desc:'Sabor concentrado, larga vida útil. Perfecto para fondos, salsas y preparaciones.', price:'$1.900', tag:null, img: getSVGDataURI('shiitake') },
+  { id:11, category:'secos', variety:'Secos', name:'Mix gourmet seco', desc:'Blend de variedades seleccionadas. Versatilidad y complejidad en un solo envase.', price:'$2.400', tag:'Nuevo', img: getSVGDataURI('king_oyster') },
+  { id:12, category:'polvo', variety:'En polvo', name:'Polvo de Shiitake', desc:'Intensificador de sabor natural. Umami puro en formato concentrado y práctico.', price:'$3.100', tag:null, img: getSVGDataURI('shiitake') },
+  { id:13, category:'polvo', variety:'En polvo', name:'Polvo Melena de León', desc:'Para incorporar en batidos, sopas o recetas. Propiedades funcionales únicas.', price:'$4.200', tag:'Funcional', img: getSVGDataURI('lion_mane') },
+];
+
+
+const varietyData = {
+  girgola:      { latin:'Pleurotus ostreatus',  name:'Gírgola',          desc:'Racimos grisáceos y textura sedosa. Sabor suave y versátil, ideal para salteados rápidos y pastas.' },
+  girgola_rosa: { latin:'Pleurotus djamor',     name:'Gírgola Rosa',     desc:'Color coral vibrante, prácticamente único en el mercado argentino. Sabor suave con notas florales.' },
+  pioppino:     { latin:'Agrocybe aegerita',    name:'Pioppino',         desc:'Aroma profundo a nuez, pies firmes. Perfecto en salsas y guisos de alta cocina.' },
+  black_pearl:  { latin:'Pleurotus hybrid',     name:'Black Pearl King', desc:'Sombrero casi negro con pie blanco firme. Alto impacto visual y textura carnosa en el plato.' },
+  chestnut:     { latin:'Pholiota adiposa',     name:'Chestnut',         desc:'Escamas características sobre sombrero castaño. Sabor a nuez, textura firme, aspecto premium.' },
+  enoki:        { latin:'Flammulina velutipes', name:'Enoki Dorado',     desc:'Tallos finos y dorados con sombreros pequeños. Crujiente, delicado, muy impactante visualmente.' }
+};
+
+function promoteVariety(key) {
+  const data = varietyData[key];
+  if (!data) return;
+  const grid = document.querySelector('.var-grid-3');
+  const cards = grid.querySelectorAll('.var-card-illus');
+  const targetCard = cards[2];
+  targetCard.querySelector('.illus-wrap').innerHTML = '<img src="' + getSVGDataURI(key) + '" style="width:100%;height:100%;object-fit:contain;padding:12%">';
+  targetCard.querySelector('.var-type').textContent = data.latin;
+  targetCard.querySelector('.var-name').textContent = data.name;
+  targetCard.querySelector('.var-desc').textContent = data.desc;
+  document.querySelectorAll('.var-mini').forEach(function(m) {
+    m.style.background = '';
+    m.style.outline = 'none';
+  });
+  var clicked = document.querySelector('[data-key="' + key + '"]');
+  if (clicked) {
+    clicked.style.background = 'rgba(181,84,30,0.22)';
+    clicked.style.outline = '1.5px solid rgba(181,84,30,0.5)';
+  }
+}
+
+function renderProducts(filter='todos'){
+  const grid=document.getElementById('productsGrid');
+  const list=filter==='todos'?products:products.filter(p=>p.category===filter);
+  grid.innerHTML=list.map(p=>`
+    <div class="product-card">
+      <div class="product-image">
+        ${p.tag?`<div class="product-tag">${p.tag}</div>`:''}
+        <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.style.opacity='0'">
+      </div>
+      <div class="product-info">
+        <div class="product-variety">${p.variety}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <div class="product-price">${p.price}</div>
+          <button class="product-add" onclick="addToCart('${p.name}')">+</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterProducts(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(cat);
+}
+
+function addToCart(name){ showToast(`${name} agregado al carrito`); }
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function handleGuiaSubmit(e){
+  e.preventDefault();
+  const email = document.getElementById('guia-email').value;
+  showToast('¡Listo! Te enviamos la guía a ' + email);
+  e.target.reset();
+}
+function handleSubmit(e){
+  e.preventDefault();
+  showToast('¡Consulta enviada! Te contactamos pronto.');
+}
+
+renderProducts();
+
+document.addEventListener('DOMContentLoaded', function() {
+  ['girgola_rosa','lion_mane','shiitake','king_oyster'].forEach(function(k) {
+    var el = document.getElementById('gal-' + k);
+    if(el) el.src = getSVGDataURI(k);
+  });
+});
+
+
+window.addEventListener('scroll',()=>{
+  const hr=document.querySelector('.hero-right');
+  if(hr&&window.scrollY<window.innerHeight) hr.style.transform=`translateY(${window.scrollY*.05}px)`;
+});
+</script>
+</body>
+</html>
